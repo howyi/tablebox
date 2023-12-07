@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1701834572087,
+      "tag": "0000_legal_shriek",
+      "breakpoints": true
+    }
+  ]
+}
