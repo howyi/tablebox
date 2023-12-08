@@ -16,12 +16,12 @@ export default async function Home() {
       }}>
         <ClientSideSuspense fallback="Loading…">
           {() => <ScreenSync>
-              <div className={'flex'}>
-                  <div className="flex-auto w-128">
+              <div className={'flex flex-row'}>
+                  <div className="basis-3/4">
+                      <Avatars />
                       <Editor />
                   </div>
-                  <div className="flex-auto w-16">
-                      <Avatars />
+                  <div className="basis-1/4">
                       <OthersViewer/>
                   </div>
               </div>

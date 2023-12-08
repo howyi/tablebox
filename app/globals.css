@@ -15,3 +15,6 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+[contenteditable]:focus {
+  outline: 0px solid transparent;
+}

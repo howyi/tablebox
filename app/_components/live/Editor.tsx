@@ -14,8 +14,13 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
+import { TRANSFORMERS } from '@lexical/markdown';
+import {MarkdownShortcutPlugin} from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { Provider } from "@lexical/yjs";
-
+import { CodeNode, CodeHighlightNode } from "@lexical/code";
+import { AutoLinkNode, LinkNode } from "@lexical/link";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 
 function initialEditorState(editor: LexicalEditor): void {
     const root = $getRoot();
@@ -36,7 +41,16 @@ export const Editor: React.FC = () => {
         // Don’t set default state, allow CollaborationPlugin to do it instead
         editorState: null,
         namespace: "Demo",
-        nodes: [],
+        nodes: [
+            HeadingNode,
+            ListNode,
+            ListItemNode,
+            QuoteNode,
+            CodeNode,
+            CodeHighlightNode,
+            AutoLinkNode,
+            LinkNode,
+        ],
         theme: {},
         onError: (error: unknown) => {
             throw error
@@ -45,8 +59,8 @@ export const Editor: React.FC = () => {
 
     return (
         <div className={"container mx-auto"}>
-            <div className={"rounded-md border-2 border-grey-800 p-4 leading-loose"}>
-            <LexicalComposer initialConfig={initialConfig}>
+            <div className={"text-lg p-8 leading-loose"}>
+            <LexicalComposer initialConfig={initialConfig} >
                 <RichTextPlugin
                     contentEditable={<ContentEditable/>}
                     placeholder={
@@ -54,6 +68,7 @@ export const Editor: React.FC = () => {
                     }
                     ErrorBoundary={LexicalErrorBoundary}
                 />
+                <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
                 <CollaborationPlugin
                     id="yjs-plugin"
                     providerFactory={(id, yDocMap) => {
