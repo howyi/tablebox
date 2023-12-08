@@ -30,11 +30,9 @@ function initialEditorState(editor: LexicalEditor): void {
     root.append(paragraph);
 }
 
-type LiveBlocksUser = { name: string, color: string, picture: string }
-
 export const Editor: React.FC = () => {
     const room = useRoom();
-    const userInfo = useSelf<LiveBlocksUser>((me) => me.info as LiveBlocksUser);
+    const userInfo = useSelf((me) => me.info);
 
     // Lexical config
     const initialConfig = {
@@ -78,8 +76,8 @@ export const Editor: React.FC = () => {
                     }}
                     initialEditorState={initialEditorState}
                     shouldBootstrap={true}
-                    cursorColor={userInfo.color}
-                    username={userInfo.name}
+                    cursorColor={userInfo?.color}
+                    username={userInfo?.name}
                 />
             </LexicalComposer>
             </div>
