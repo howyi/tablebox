@@ -1,4 +1,4 @@
-import { useRoom } from "@/liveblocks.config";
+import {useRoom, useSelf} from "@/liveblocks.config";
 import * as Y from "yjs";
 import LiveblocksProvider from "@liveblocks/yjs";
 import {
@@ -7,12 +7,12 @@ import {
     $createTextNode,
     LexicalEditor,
 } from "lexical";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
+import {LexicalComposer} from "@lexical/react/LexicalComposer";
+import {ContentEditable} from "@lexical/react/LexicalContentEditable";
+import {RichTextPlugin} from "@lexical/react/LexicalRichTextPlugin";
+import {CollaborationPlugin} from "@lexical/react/LexicalCollaborationPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { Provider } from "@lexical/yjs";
+import {Provider} from "@lexical/yjs";
 import React from "react";
 
 function initialEditorState(editor: LexicalEditor): void {
@@ -23,8 +23,11 @@ function initialEditorState(editor: LexicalEditor): void {
     root.append(paragraph);
 }
 
+type LiveBlocksUser = { name: string, color: string, picture: string }
+
 export const Editor: React.FC = () => {
     const room = useRoom();
+    const userInfo = useSelf<LiveBlocksUser>((me) => me.info as LiveBlocksUser);
 
     // Lexical config
     const initialConfig = {
@@ -41,7 +44,7 @@ export const Editor: React.FC = () => {
     return (
         <LexicalComposer initialConfig={initialConfig}>
             <RichTextPlugin
-                contentEditable={<ContentEditable />}
+                contentEditable={<ContentEditable/>}
                 placeholder={
                     <div>Start typing here…</div>
                 }
@@ -56,6 +59,8 @@ export const Editor: React.FC = () => {
                 }}
                 initialEditorState={initialEditorState}
                 shouldBootstrap={true}
+                cursorColor={userInfo.color}
+                username={userInfo.name}
             />
         </LexicalComposer>
     );

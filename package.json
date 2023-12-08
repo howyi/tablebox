@@ -21,6 +21,7 @@
     "@lexical/react": "^0.12.5",
     "@lexical/yjs": "^0.12.5",
     "@liveblocks/client": "^1.8.2",
+    "@liveblocks/node": "^1.8.2",
     "@liveblocks/react": "^1.8.2",
     "@liveblocks/yjs": "^1.8.2",
     "@planetscale/database": "^1.11.0",
