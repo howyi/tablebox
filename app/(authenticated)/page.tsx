@@ -1,5 +1,6 @@
 import { auth } from "../auth"
 import {Todos} from "@/app/_components/Todos";
+import {LiveBlocksEditor} from "@/app/_components/LiveBlocksEditor";
 
 export default async function Home() {
   const session = await auth()
@@ -13,9 +14,7 @@ export default async function Home() {
         >Sign out</a>
 
         <p>Welcome {session?.user?.name}!</p>
-        <pre>
-          {JSON.stringify(session, null, 2)}
-        </pre>
+        <LiveBlocksEditor />
         <Todos />
       </div>
     </main>
