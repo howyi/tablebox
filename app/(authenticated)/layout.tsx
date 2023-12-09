@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import {auth} from "@/app/auth";
 import {redirect} from "next/navigation";
 import '../globals.css'
+import {NavBar} from "@/app/_components/NavBar";
+import {ClientSessionWrapper} from "@/app/_components/ClientSessionWrapper";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,7 +27,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientSessionWrapper>
+          <NavBar />
+        </ClientSessionWrapper>
+        {children}
+      </body>
     </html>
   )
 }
