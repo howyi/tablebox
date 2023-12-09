@@ -1,12 +1,15 @@
 on:
   schedule:
-    - cron:  '* * * * *'
+    - cron:  '*/10 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v4
       - run: npm install
       - run: npm run cron
+        env:
+          CRON_URL: ${{secrets.CRON_URL}}
+          CRON_VERIFICATION_CODE: ${{secrets.CRON_VERIFICATION_CODE}}

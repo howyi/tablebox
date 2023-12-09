@@ -5,7 +5,7 @@ import {tableUrlParse} from "@/app/api/cron/tableUrlParser";
 import {check as sevenwonders} from '@/app/api/cron/sevenwonders';
 
 // cron実行間隔
-const NOTIFY_MINUTES = 1;
+const NOTIFY_MINUTES = 10;
 
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
