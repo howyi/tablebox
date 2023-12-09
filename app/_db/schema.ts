@@ -1,4 +1,14 @@
-import { int, timestamp, mysqlEnum, mysqlTable, bigint, uniqueIndex, varchar, primaryKey } from 'drizzle-orm/mysql-core';
+import {
+    int,
+    timestamp,
+    mysqlEnum,
+    mysqlTable,
+    bigint,
+    uniqueIndex,
+    varchar,
+    primaryKey,
+    text
+} from 'drizzle-orm/mysql-core';
 import type { AdapterAccount } from "@auth/core/adapters"
 import {relations} from "drizzle-orm";
 
@@ -28,6 +38,23 @@ export const todosRelations = relations(todos, ({ one }) => ({
         references: [users.id],
     }),
 }));
+
+export const bga_team_webhook_settings = mysqlTable(
+    'bga_team_webhook_settings',
+    {
+        teamId: varchar('teamId', { length: 255 }).primaryKey().notNull(),
+        slackWebhookUrl: varchar("slackWebhookUrl", { length: 255 }),
+    }
+)
+
+export const bga_team_notify_settings = mysqlTable(
+    'bga_team_notify_settings',
+    {
+        id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+        teamId: varchar('teamId', { length: 255 }).notNull(),
+        tableUrl: text('tableUrl').notNull(),
+    }
+)
 
 // Next-Auth 用DB
 // https://authjs.dev/reference/adapter/drizzle#mysql
