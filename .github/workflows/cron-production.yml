@@ -2,8 +2,9 @@ on:
   schedule:
     - cron:  '* * * * *'
 jobs:
-  test_schedule:
+  cron:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
       - uses: volta-cli/action@v4
