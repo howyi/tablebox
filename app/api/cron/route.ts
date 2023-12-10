@@ -7,16 +7,27 @@ import * as schema from "@/app/_db/schema";
 import {desc} from "drizzle-orm";
 import {cron_job_histories} from "@/app/_db/schema";
 
+// cron実行間隔
+const CRON_INTERVAL_MINUTES = 10
+
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const code = searchParams.get('code')
-    console.log(code)
 
     if (code != process.env.CRON_VERIFICATION_CODE) {
         return NextResponse.json({
             message: 'verification error'
         }, { status: 401 });
     }
+
+    const latestHistory = await db.query.cron_job_histories.findFirst({
+        orderBy: [desc(cron_job_histories.id)],
+    })
+
+    const checkAfterUnixTime = latestHistory ?
+        Math.floor(latestHistory.executed_at.getTime() / 1000) :
+        Math.floor(new Date().getTime() / 1000) - (CRON_INTERVAL_MINUTES.valueOf() * 60)
+    console.log('checkAfterUnixTime: ', new Date(checkAfterUnixTime * 1000))
 
     const notifies = await db.query.bga_team_notify_settings.findMany()
     const webhooks = await db.query.bga_team_webhook_settings.findMany()
@@ -32,13 +43,7 @@ export async function GET(req: NextRequest) {
 
         const parsed = tableUrlParse(notify.tableUrl)
 
-        const latestHistory = await db.query.cron_job_histories.findFirst({
-            orderBy: [desc(cron_job_histories.id)],
-        })
-        const checkAfterUnixTime = latestHistory ? Math.floor(latestHistory.executed_at.getTime() / 1000) : 0
-
         console.log(parsed)
-        console.log('checkAfterUnixTime: ', new Date(checkAfterUnixTime * 1000))
         let res: IncomingWebhookSendArguments | undefined
         switch (parsed.gameName) {
             case "sevenwonders":
