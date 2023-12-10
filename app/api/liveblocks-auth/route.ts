@@ -1,6 +1,7 @@
 import { Liveblocks } from "@liveblocks/node";
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/app/auth";
+import {authenticate} from "@/app/_actions/auth";
 
 const liveblocks = new Liveblocks({
     secret: process.env.LIVEBLOCKS_API_KEY!,
@@ -15,8 +16,10 @@ export async function POST(request: NextRequest) {
         })
     }
 
+    const user = await authenticate()
+
     // Get the current user's info from your database
-    const user = {
+    const liveUser = {
         id: session.user.id,
         info: {
             name: session.user.name!,
@@ -27,13 +30,12 @@ export async function POST(request: NextRequest) {
 
     // Create a session for the current user
     // userInfo is made available in Liveblocks presence hooks, e.g. useOthers
-    const liveSession = liveblocks.prepareSession(user.id, {
-        userInfo: user.info,
+    const liveSession = liveblocks.prepareSession(liveUser.id, {
+        userInfo: liveUser.info,
     });
 
     // Give the user access to the room
-    const { room } = await request.json();
-    liveSession.allow(room, liveSession.FULL_ACCESS);
+    liveSession.allow(user.teamId, liveSession.FULL_ACCESS);
 
     // Authorize the user and return the result
     const { body, status } = await liveSession.authorize();
