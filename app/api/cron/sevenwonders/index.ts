@@ -43,7 +43,7 @@ const REPLACE: {[key in string]: string} = {
     "<div class=\"siconmini sicon_mcoin\"></div>": ":sicon_mcoin:",
 }
 
-export const check = async (notifyMinutes: Number, tableRegion: Number, tableId: Number): Promise<IncomingWebhookSendArguments | undefined> => {
+export const check = async (checkAfterUnixTime: Number, tableRegion: Number, tableId: Number): Promise<IncomingWebhookSendArguments | undefined> => {
 
     const HistoryUrl = `https://ja.boardgamearena.com/${tableRegion}/sevenwonders/sevenwonders/notificationHistory.html`
 
@@ -92,9 +92,6 @@ export const check = async (notifyMinutes: Number, tableRegion: Number, tableId:
             break
         }
         console.log("History Response", data)
-        const date = new Date();
-        const now = Math.floor(date.getTime() / 1000)
-        const checkAfterTime = now - (notifyMinutes.valueOf() * 60)
         let lastPacketId = from
         for (const resKey in data) {
             const d = data[resKey]
@@ -105,7 +102,7 @@ export const check = async (notifyMinutes: Number, tableRegion: Number, tableId:
             if (d.packet_type != 'history') {
                 continue
             }
-            if (checkAfterTime >= Number(d.time)) {
+            if (Number(checkAfterUnixTime) >= Number(d.time)) {
                 continue
             }
             NotifyLogs.push(d)

@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tablebox
-      TZ: 'Asia/Tokyo'
+      TZ: 'UTC'
     restart: always
     ports:
       - 3326:3306

@@ -7,7 +7,7 @@ import {
     uniqueIndex,
     varchar,
     primaryKey,
-    text
+    text, datetime
 } from 'drizzle-orm/mysql-core';
 import type { AdapterAccount } from "@auth/core/adapters"
 import {relations} from "drizzle-orm";
@@ -53,6 +53,14 @@ export const bga_team_notify_settings = mysqlTable(
         id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
         teamId: varchar('teamId', { length: 255 }).notNull(),
         tableUrl: text('tableUrl').notNull(),
+    }
+)
+
+export const cron_job_histories = mysqlTable(
+    'cron_job_histories',
+    {
+        id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+        executed_at: datetime("executed_at").notNull(),
     }
 )
 

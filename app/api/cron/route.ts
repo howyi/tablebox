@@ -3,9 +3,9 @@ import {NextRequest, NextResponse} from "next/server";
 import {IncomingWebhook, IncomingWebhookSendArguments} from "@slack/webhook";
 import {tableUrlParse} from "@/app/api/cron/tableUrlParser";
 import {check as sevenwonders} from '@/app/api/cron/sevenwonders';
-
-// cron実行間隔
-const NOTIFY_MINUTES = 10;
+import * as schema from "@/app/_db/schema";
+import {desc} from "drizzle-orm";
+import {cron_job_histories} from "@/app/_db/schema";
 
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
@@ -32,11 +32,17 @@ export async function GET(req: NextRequest) {
 
         const parsed = tableUrlParse(notify.tableUrl)
 
+        const latestHistory = await db.query.cron_job_histories.findFirst({
+            orderBy: [desc(cron_job_histories.id)],
+        })
+        const checkAfterUnixTime = latestHistory ? Math.floor(latestHistory.executed_at.getTime() / 1000) : 0
+
         console.log(parsed)
+        console.log('checkAfterUnixTime: ', new Date(checkAfterUnixTime * 1000))
         let res: IncomingWebhookSendArguments | undefined
         switch (parsed.gameName) {
             case "sevenwonders":
-                res = await sevenwonders(NOTIFY_MINUTES, parsed.tableRegion, parsed.tableId)
+                res = await sevenwonders(checkAfterUnixTime, parsed.tableRegion, parsed.tableId)
                 break
             default:
                 break
@@ -51,6 +57,10 @@ export async function GET(req: NextRequest) {
             ...res
         });
     }
+
+    await db.insert(schema.cron_job_histories).values({
+        executed_at: new Date()
+    })
 
     return NextResponse.json({ });
 }
