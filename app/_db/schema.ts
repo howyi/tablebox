@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/mysql-core';
 import type { AdapterAccount } from "@auth/core/adapters"
 import {relations} from "drizzle-orm";
+import {Installation} from "@slack/bolt";
 
 export const user_slack_teams = mysqlTable(
     'user_slack_teams',
@@ -55,6 +56,14 @@ export const bga_team_notify_settings = mysqlTable(
         tableUrl: text('tableUrl').notNull(),
     }
 )
+
+export const tablebox_teams = mysqlTable(
+    'tablebox_teams',
+    {
+        id: varchar('id', { length: 255 }).primaryKey().notNull(),
+        installation: json('installation').$type<Installation>(),
+    },
+);
 
 export const cron_job_histories = mysqlTable(
     'cron_job_histories',
