@@ -41,7 +41,10 @@ const receiver = new NextRouteHandlerReceiver({
         'im:history',
         'users:read',
         'links:write',
-    ],
+        'chat:write',
+        'chat:write.public',
+        'chat:write.customize',
+],
     stateSecret: process.env.SLACK_STATE_SECRET,
     installationStore: {
         storeInstallation: async (installation) => {
@@ -74,7 +77,7 @@ const app = new App({
 })
 
 app.event('reaction_added', async ({event, say, client, context}) => {
-    if (event.reaction != 'teki') {
+    if (event.reaction != 'm_koutei' && event.reaction != 'm_hitei' && event.reaction != 'm_tekitou') {
         return
     }
     const conversations = (await client.conversations.history({
@@ -88,18 +91,35 @@ app.event('reaction_added', async ({event, say, client, context}) => {
         return
     }
 
+    let prompt = ''
+    switch (event.reaction) {
+        case('m_koutei'):
+            prompt = '以下のテキストに友人のように肯定的な返信をしてください'
+            break;
+        case('m_hitei'):
+            prompt = '以下のテキストに友人のように否定的な返信をしてください'
+            break;
+        case('m_tekitou'):
+            prompt = '以下のテキストにぶっきらぼうな相槌をしてください'
+            break;
+    }
+
     const completion = await openai.chat.completions.create({
         messages: [{
             role: "system",
-            content: `以下のテキストにぶっきらぼうな相槌をしてください
+            content: `${prompt}
             ----
             ${conversations[0].text}
             `
         }],
         model: "gpt-3.5-turbo",
     });
-    console.log(completion)
-    await say(completion.choices[0].message.content ?? '')
+    await client.chat.postMessage({
+        channel: event.item.channel,
+        username: '返答メカ',
+        icon_emoji: `:${event.reaction}:`,
+        text: completion.choices[0].message.content ?? ''
+    })
 })
 
 const handler = await receiver.start()

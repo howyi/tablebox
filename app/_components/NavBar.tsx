@@ -86,6 +86,16 @@ export const NavBar: React.FC = () => {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <a
+                                                        href="/api/slack/install"
+                                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                                    >
+                                                        Update SlackApp
+                                                    </a>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <a
                                                         href="/api/auth/signout"
                                                         className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                                                     >
