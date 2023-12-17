@@ -80,6 +80,10 @@ app.event('reaction_added', async ({event, say, client, context}) => {
     if (event.reaction != 'm_koutei' && event.reaction != 'm_hitei' && event.reaction != 'm_tekitou') {
         return
     }
+    if (context.retryNum) {
+        // リトライによる再送は無視する
+        return
+    }
     const conversations = (await client.conversations.history({
         channel: event.item.channel,
         latest: event.item.ts,
