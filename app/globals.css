@@ -16,26 +16,6 @@
   }
 }
 
-[contenteditable]:focus {
-  outline: 0px solid transparent;
-}
-
-ol > li {
-  list-style-type: disk;
-}
-
-ul > li {
-  list-style-type: circle;
-}
-
-code {
-  background: lavender;
-  padding: 1px 4px;
-  margin: 0 4px;
-  border-radius: 4px;
-  list-style-position: inside;
-}
-
 /* Give a remote user a caret */
 .collaboration-cursor__caret {
   position: relative;

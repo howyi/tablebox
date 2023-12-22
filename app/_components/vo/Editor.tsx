@@ -1,13 +1,16 @@
 'use client'
 
 import React, {useState} from "react";
-import { Editor as NovelEditor } from "novel";
+// import { Editor as NovelEditor } from "novel";
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
-import {useMyPresence, useRoom, useSelf} from "@/liveblocks.config";
+import {useRoom, useSelf} from "@/liveblocks.config";
 import LiveblocksProvider from "@liveblocks/yjs";
-import {StarterKit} from "@tiptap/starter-kit";
 import {CollaborationCursor} from "@tiptap/extension-collaboration-cursor";
+import "@/app/_components/novel/styles/index.css";
+import "@/app/_components/novel/styles/prosemirror.css";
+import {NovelEditor} from "@/app/_components/novel/ui/editor";
+import {OthersViewer} from "@/app/_components/live/OthersViewer";
 
 export const Editor: React.FC = () => {
     const room = useRoom();
@@ -34,17 +37,15 @@ export const Editor: React.FC = () => {
     }
 
     return (
-        <div className={'flex flex-col items-center p-4'}>
+        <div className={'flex flex-col items-center'}>
             {/*<OthersViewer />*/}
             <NovelEditor
                 completionApi={'/api/generate'}
                 disableLocalStorage
                 defaultValue={''}
+                className={'prose lg:prose-2xl'}
                 extensions={
                     [
-                        StarterKit.configure({
-                            history: false,
-                        }),
                         Collaboration.configure({
                             document: yDoc,
                         }),
