@@ -8,7 +8,7 @@ export default async function Home() {
   const {teamId} = await authenticate()
   return (
     <main>
-      <Room roomId={teamId} />
+      <Room roomId={`${teamId}:live`} />
     </main>
   )
 }

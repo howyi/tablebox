@@ -29,6 +29,8 @@
     "@planetscale/database": "^1.11.0",
     "@slack/bolt": "^3.16.0",
     "@slack/webhook": "^7.0.1",
+    "@tiptap/extension-collaboration": "^2.1.13",
+    "@tiptap/extension-collaboration-cursor": "^2.1.13",
     "drizzle-orm": "^0.28.6",
     "lexical": "^0.12.5",
     "next": "14.0.3",

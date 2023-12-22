@@ -2,13 +2,13 @@
 
 import React from "react";
 import {authenticate} from "@/app/_actions/auth";
-import {Editor} from "@/app/_components/vo/Editor";
+import {Room} from "@/app/_components/vo/Room";
 
 export default async function Home() {
   const {teamId} = await authenticate()
   return (
     <main>
-      <Editor />
+        <Room roomId={`${teamId}:vo`} />
     </main>
   )
 }

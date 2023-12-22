@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Give the user access to the room
-    liveSession.allow(user.teamId, liveSession.FULL_ACCESS);
+    liveSession.allow(`${user.teamId}:*`, liveSession.FULL_ACCESS);
 
     // Authorize the user and return the result
     const { body, status } = await liveSession.authorize();
