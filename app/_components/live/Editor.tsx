@@ -57,7 +57,7 @@ export const Editor: React.FC = () => {
 
     return (
         <div className={"container mx-auto"}>
-            <div className={"text-lg p-8 leading-loose"}>
+            <div className={"text-lg p-8 leading-loose prose lg:prose-xl"}>
             <LexicalComposer initialConfig={initialConfig} >
                 <RichTextPlugin
                     contentEditable={<ContentEditable/>}
