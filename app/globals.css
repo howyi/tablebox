@@ -20,11 +20,6 @@
   outline: 0px solid transparent;
 }
 
-li {
-  list-style-type: disk;
-  list-style-position: inside;
-}
-
 code {
   background: lavender;
   padding: 1px 4px;

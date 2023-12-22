@@ -9,6 +9,7 @@ import {usePathname} from "next/navigation";
 const navigation = [
     { name: 'ToDo', href: '/' },
     { name: 'LiveBlocks', href: '/live' },
+    { name: 'VO', href: '/vo' },
     { name: 'BGA-Notify', href: '/bga' },
 ]
 
