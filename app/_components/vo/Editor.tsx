@@ -37,13 +37,12 @@ export const Editor: React.FC = () => {
     }
 
     return (
-        <div className={'flex flex-col items-center'}>
+        <div className={'flex flex-col items-center sm:p-12'}>
             {/*<OthersViewer />*/}
             <NovelEditor
                 completionApi={'/api/generate'}
                 disableLocalStorage
                 defaultValue={''}
-                className={'prose lg:prose-2xl'}
                 extensions={
                     [
                         Collaboration.configure({

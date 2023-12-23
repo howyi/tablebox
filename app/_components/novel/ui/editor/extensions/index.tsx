@@ -37,25 +37,25 @@ export const defaultExtensions = [
     },
     blockquote: {
       HTMLAttributes: {
-        class: "border-l-4 border-stone-700",
+        class: "border-l-4 border-[var(--novel-stone-700)]",
       },
     },
     codeBlock: {
       HTMLAttributes: {
         class:
-          "rounded-sm bg-stone-100 p-5 font-mono font-medium text-stone-800",
+          "rounded-sm bg-[var(--novel-stone-100)] p-5 font-mono font-medium text-[var(--novel-stone-800)]",
       },
     },
     code: {
       HTMLAttributes: {
         class:
-          "rounded-md bg-stone-200 px-1.5 py-1 font-mono font-medium text-stone-900",
+          "rounded-md bg-[var(--novel-stone-200)] px-1.5 py-1 font-mono font-medium text-[var(--novel-code)]",
         spellcheck: "false",
       },
     },
     horizontalRule: false,
     dropcursor: {
-      color: "#DBEAFE",
+      color: "var(--novel-dropcursor)",
       width: 4,
     },
     gapcursor: false,
@@ -84,13 +84,13 @@ export const defaultExtensions = [
     },
   }).configure({
     HTMLAttributes: {
-      class: "mt-4 mb-6 border-t border-stone-300",
+      class: "mt-4 mb-6 border-t border-[var(--novel-stone-300)]",
     },
   }),
   TiptapLink.configure({
     HTMLAttributes: {
       class:
-        "text-stone-400 underline underline-offset-[3px] hover:text-stone-600 transition-colors cursor-pointer",
+        "text-[var(--novel-link)] underline underline-offset-[3px] hover:text-[var(--novel-link-hover)] transition-colors cursor-pointer",
     },
   }),
   TiptapImage.extend({
@@ -100,12 +100,12 @@ export const defaultExtensions = [
   }).configure({
     allowBase64: true,
     HTMLAttributes: {
-      class: "rounded-lg border border-stone-200",
+      class: "rounded-lg border border-[var(--novel-stone-200)]",
     },
   }),
   UpdatedImage.configure({
     HTMLAttributes: {
-      class: "rounded-lg border border-stone-200",
+      class: "rounded-lg border border-[var(--novel-stone-200)]",
     },
   }),
   Placeholder.configure({

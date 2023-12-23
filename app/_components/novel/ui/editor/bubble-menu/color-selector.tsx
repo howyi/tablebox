@@ -17,7 +17,7 @@ interface ColorSelectorProps {
 const TEXT_COLORS: BubbleColorMenuItem[] = [
   {
     name: "Default",
-    color: "var(--black)",
+    color: "var(--novel-black)",
   },
   {
     name: "Purple",
@@ -56,39 +56,39 @@ const TEXT_COLORS: BubbleColorMenuItem[] = [
 const HIGHLIGHT_COLORS: BubbleColorMenuItem[] = [
   {
     name: "Default",
-    color: "var(--highlight-default)",
+    color: "var(--novel-highlight-default)",
   },
   {
     name: "Purple",
-    color: "var(--highlight-purple)",
+    color: "var(--novel-highlight-purple)",
   },
   {
     name: "Red",
-    color: "var(--highlight-red)",
+    color: "var(--novel-highlight-red)",
   },
   {
     name: "Yellow",
-    color: "var(--highlight-yellow)",
+    color: "var(--novel-highlight-yellow)",
   },
   {
     name: "Blue",
-    color: "var(--highlight-blue)",
+    color: "var(--novel-highlight-blue)",
   },
   {
     name: "Green",
-    color: "var(--highlight-green)",
+    color: "var(--novel-highlight-green)",
   },
   {
     name: "Orange",
-    color: "var(--highlight-orange)",
+    color: "var(--novel-highlight-orange)",
   },
   {
     name: "Pink",
-    color: "var(--highlight-pink)",
+    color: "var(--novel-highlight-pink)",
   },
   {
     name: "Gray",
-    color: "var(--highlight-gray)",
+    color: "var(--novel-highlight-gray)",
   },
 ];
 
@@ -109,7 +109,7 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
     <Popover.Root open={isOpen}>
       <div className="relative h-full">
         <Popover.Trigger
-          className="flex h-full items-center gap-1 p-2 text-sm font-medium text-stone-600 hover:bg-stone-100 active:bg-stone-200"
+          className="flex h-full items-center gap-1 p-2 text-sm font-medium text-[var(--novel-stone-600)] hover:bg-[var(--novel-stone-100)] active:bg-[var(--novel-stone-200)]"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span
@@ -127,9 +127,9 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
 
         <Popover.Content
           align="start"
-          className="z-[99999] my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border border-stone-200 bg-white p-1 shadow-xl animate-in fade-in slide-in-from-top-1"
+          className="z-[99999] my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border border-[var(--novel-stone-200)] bg-[var(--novel-white)] p-1 shadow-xl animate-in fade-in slide-in-from-top-1"
         >
-          <div className="my-1 px-2 text-sm text-stone-500">
+          <div className="my-1 px-2 text-sm text-[var(--novel-stone-500)]">
             Color
           </div>
           {TEXT_COLORS.map(({ name, color }, index) => (
@@ -145,12 +145,12 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
                     .run();
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between rounded-sm px-2 py-1 text-sm text-stone-600 hover:bg-stone-100"
+              className="flex items-center justify-between rounded-sm px-2 py-1 text-sm text-[var(--novel-stone-600)] hover:bg-[var(--novel-stone-100)]"
               type="button"
             >
               <div className="flex items-center space-x-2">
                 <div
-                  className="rounded-sm border border-stone-200 px-1 py-px font-medium"
+                  className="rounded-sm border border-[var(--novel-stone-200)] px-1 py-px font-medium"
                   style={{ color }}
                 >
                   A
@@ -163,7 +163,7 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
             </button>
           ))}
 
-          <div className="mb-1 mt-2 px-2 text-sm text-stone-500">
+          <div className="mb-1 mt-2 px-2 text-sm text-[var(--novel-stone-500)]">
             Background
           </div>
 
@@ -175,7 +175,7 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
                 name !== "Default" && editor.commands.setHighlight({ color });
                 setIsOpen(false);
               }}
-              className="flex items-center justify-between rounded-sm px-2 py-1 text-sm text-stone-600 hover:bg-stone-100"
+              className="flex items-center justify-between rounded-sm px-2 py-1 text-sm text-[var(--novel-stone-600)] hover:bg-[var(--novel-stone-100)]"
               type="button"
             >
               <div className="flex items-center space-x-2">
