@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { kv } from "@vercel/kv";
 import { Ratelimit } from "@upstash/ratelimit";
+import {auth} from "@/app/auth";
+import {NextResponse} from "next/server";
 
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
@@ -9,9 +11,19 @@ const openai = new OpenAI({
 });
 
 // IMPORTANT! Set the runtime to edge: https://vercel.com/docs/functions/edge-functions/edge-runtime
-export const runtime = "edge";
+// NextAuthがv4ではedgeでの動作に対応していないので無効化 https://github.com/nextauthjs/next-auth/discussions/5855
+// export const runtime = "edge";
 
 export async function POST(req: Request): Promise<Response> {
+    const session = await auth()
+
+    if (!session) {
+        return NextResponse.json({}, {
+            status: 401
+        })
+    }
+
+
     // Check if the OPENAI_API_KEY is set, if not return 400
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "") {
         return new Response(
