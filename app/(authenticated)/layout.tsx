@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 import '../globals.css'
 import {NavBar} from "@/app/_components/NavBar";
 import {ClientSessionWrapper} from "@/app/_components/ClientSessionWrapper";
+import {Providers} from "@/app/_components/Providers";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,12 +26,16 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
+      // suppressHydrationWarning
+      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ClientSessionWrapper>
-          <NavBar />
-        </ClientSessionWrapper>
-        {children}
+        <Providers>
+          <ClientSessionWrapper>
+            <NavBar />
+          </ClientSessionWrapper>
+          {children}
+        </Providers>
       </body>
     </html>
   )
