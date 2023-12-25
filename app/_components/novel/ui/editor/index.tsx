@@ -17,6 +17,7 @@ import { EditorProps } from "@tiptap/pm/view";
 import { Editor as EditorClass, Extensions } from "@tiptap/core";
 import { NovelContext } from "./provider";
 
+// https://github.com/yjs/y-prosemirror/issues/149
 export function NovelEditor({
   completionApi = "/api/generate",
   className = "relative min-h-[500px] w-full max-w-screen-lg border-[var(--novel-stone-200)] bg-[var(--novel-white)] sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:shadow-lg",
