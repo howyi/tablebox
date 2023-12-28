@@ -33,7 +33,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
     {
       name: "bold",
       isActive: () => props.editor?.isActive("bold") ?? false,
-      command: () => props.editor?.chain().focus().toggleBold().run() ?? false,
+      command: () => props.editor?.chain().focus().toggleBold().run(),
       icon: BoldIcon,
     },
     {
@@ -120,7 +120,7 @@ export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
           >
             <item.icon
               className={cn("h-4 w-4", {
-                "text-blue-500": item.isActive(),
+                "text-[var(--novel-active)]": item.isActive(),
               })}
             />
           </button>

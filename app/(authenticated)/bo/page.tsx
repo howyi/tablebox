@@ -2,7 +2,7 @@
 
 import React from "react";
 import {authenticate} from "@/app/_actions/auth";
-import {Room} from "@/app/_components/vo/Room";
+import {Room} from "@/app/_components/bo/Room";
 
 export default async function Home() {
   const {teamId} = await authenticate()

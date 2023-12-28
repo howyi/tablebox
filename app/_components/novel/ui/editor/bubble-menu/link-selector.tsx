@@ -35,11 +35,11 @@ export const LinkSelector: FC<LinkSelectorProps> = ({
           className={cn(
             "underline decoration-[var(--novel-stone-400)] underline-offset-4",
             {
-              "text-blue-500": editor.isActive("link"),
+              "text-[var(--novel-active)]": editor.isActive("link"),
             }
           )}
         >
-          Link
+          リンク
         </p>
       </button>
       {isOpen && (
@@ -56,7 +56,7 @@ export const LinkSelector: FC<LinkSelectorProps> = ({
           <input
             ref={inputRef}
             type="text"
-            placeholder="Paste a link"
+            placeholder="リンクを貼り付け"
             className="flex-1 bg-[var(--novel-white)] p-1 text-sm outline-none"
             defaultValue={editor.getAttributes("link").href || ""}
           />

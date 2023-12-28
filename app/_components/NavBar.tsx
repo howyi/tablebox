@@ -9,9 +9,8 @@ import { useTheme } from 'next-themes'
 
 const navigation = [
     { name: 'ToDo', href: '/' },
-    { name: 'LiveBlocks', href: '/live' },
-    { name: 'VO', href: '/vo' },
-    { name: 'BGA-Notify', href: '/bga' },
+    { name: 'BGA', href: '/bga' },
+    { name: 'BO', href: '/bo' },
 ]
 
 function classNames(...classes: string[]) {

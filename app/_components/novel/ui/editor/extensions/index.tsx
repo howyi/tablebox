@@ -111,9 +111,9 @@ export const defaultExtensions = [
   Placeholder.configure({
     placeholder: ({ node }) => {
       if (node.type.name === "heading") {
-        return `Heading ${node.attrs.level}`;
+        return `見出し ${node.attrs.level}`;
       }
-      return "Press '/' for commands, or '++' for AI autocomplete...";
+      return "'/'を入力してコマンド一覧を表示、'++'でAIに続きの文章を書いてもらうことができます";
     },
     includeChildren: true,
   }),
