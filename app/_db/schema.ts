@@ -73,6 +73,27 @@ export const cron_job_histories = mysqlTable(
     }
 )
 
+export const boil_notes = mysqlTable(
+    'boil_notes',
+    {
+        id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+        teamId: varchar('teamId', { length: 255 }).primaryKey().notNull(),
+    }
+)
+
+export const boil_pages = mysqlTable(
+    'boil_pages',
+    {
+        id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+        note_id: bigint('id', { mode: 'number' }).primaryKey(),
+        slug: varchar('slug', { length: 24 }).notNull(),
+        body_raw: json('body_raw'),
+        body_text: text('body_text'),
+        created_at: datetime("created_at").notNull(),
+        updated_at: datetime("updated_at").notNull(),
+    }
+)
+
 // Next-Auth 用DB
 // https://authjs.dev/reference/adapter/drizzle#mysql
 export const users = mysqlTable("user", {

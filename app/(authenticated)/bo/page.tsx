@@ -2,13 +2,13 @@
 
 import React from "react";
 import {authenticate} from "@/app/_actions/auth";
-import {Room} from "@/app/_components/bo/Room";
+import {CollabEditor, ProvidedCollabEditor} from "@/app/_components/bo/CollabEditor";
 
 export default async function Home() {
   const {teamId} = await authenticate()
   return (
     <main>
-        <Room roomId={`${teamId}:vo`} />
+        <ProvidedCollabEditor roomId={`${teamId}:vo`} />
     </main>
   )
 }
