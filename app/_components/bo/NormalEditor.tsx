@@ -5,10 +5,12 @@ import "@/app/_components/novel/styles/index.css";
 import "@/app/_components/novel/styles/prosemirror.css";
 import {NovelEditor} from "@/app/_components/novel/ui/editor";
 import {Editor as EditorClass} from "@tiptap/core";
+import {JSONContent} from "@tiptap/react";
 
 type Props = {
     onUpdate: (editor: EditorClass) => Promise<void>
     onDebouncedUpdate: (editor: EditorClass) => Promise<void>
+    defaultValue: JSONContent
 }
 
 export const NormalEditor: React.FC<Props> = (props) => {
@@ -29,7 +31,7 @@ export const NormalEditor: React.FC<Props> = (props) => {
             <NovelEditor
                 completionApi={'/api/generate'}
                 disableLocalStorage
-                defaultValue={''}
+                defaultValue={props.defaultValue}
                 debounceDuration={750}
                 onDebouncedUpdate={onDebouncedUpdate}
                 onUpdate={onUpdate}
