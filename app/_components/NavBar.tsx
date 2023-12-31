@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes'
 const navigation = [
     { name: 'ToDo', href: '/' },
     { name: 'BGA', href: '/bga' },
+    { name: 'Liveblocks', href: '/live' },
     { name: 'BO', href: '/bo' },
 ]
 

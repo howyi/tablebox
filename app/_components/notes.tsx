@@ -10,6 +10,7 @@ import React, {Suspense} from "react";
 import {generate, count} from "random-words";
 import {DeleteIcon} from "lucide-react";
 import {TrashIcon} from "@heroicons/react/20/solid";
+import {SubmitButton} from "@/app/_components/submit-button";
 
 export function Notes() {
     return (
@@ -51,10 +52,10 @@ export function Notes() {
                     id="slug"
                     value={generate()}
                 />
-                <Button className="mt-6" size="sm" type={"submit"}>
+                <SubmitButton className="mt-6" size="sm">
                     <PlusIcon className="mr-2 w-5 h-5"/>
                     ノートを追加する
-                </Button>
+                </SubmitButton>
             </form>
         </main>
     )
@@ -90,9 +91,9 @@ const NoteList: React.FC = async () => {
                                 id="note_id"
                                 value={n.id}
                             />
-                            <Button type={'submit'} className={'hover:bg-red-600 hover:text-white'}>
+                            <SubmitButton className={'hover:bg-red-600 hover:text-white'}>
                                 <TrashIcon className="w-5 h-5"/>
-                            </Button>
+                            </SubmitButton>
                         </form>
                     </div>
                 </Card>

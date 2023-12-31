@@ -9,20 +9,54 @@ import React, {Suspense} from "react";
 import {addPage, deletePage, fetchPages} from "@/app/_actions/bo/pages";
 import {generate} from "random-words";
 import {deleteNote} from "@/app/_actions/bo/notes";
-import {TrashIcon} from "@heroicons/react/20/solid";
+import {ArrowRightIcon, TrashIcon} from "@heroicons/react/20/solid";
+import {SubmitButton} from "@/app/_components/submit-button";
 
 export const Pages: React.FC<{ note_slug: string }> = (params) => {
     return (
         <main className="flex flex-col items-center mt-10">
-            <div className="relative w-full max-w-md mb-6">
-                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"/>
-                <Input
-                    className="pl-10 border border-gray-300 rounded-md w-full"
-                    placeholder="ページを検索する..."
-                    type="search"
-                    disabled={true}
+            <nav aria-label="breadcrumb" className="mb-4">
+                <ol className="flex items-center space-x-2">
+                    <li>
+                        <a className="text-sm text-gray-500" href="/bo">
+                            BO
+                        </a>
+                    </li>
+                    <ArrowRightIcon className="w-4 h-4 text-gray-500"/>
+                    <li>
+                        <a className="text-sm text-gray-500" href={`/bo/${params.note_slug}`}>
+                            {params.note_slug}
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            {/*<div className="relative w-full max-w-md mb-6">*/}
+            {/*    <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"/>*/}
+            {/*    <Input*/}
+            {/*        className="pl-10 border border-gray-300 rounded-md w-full"*/}
+            {/*        placeholder="ページを検索する..."*/}
+            {/*        type="search"*/}
+            {/*        disabled={true}*/}
+            {/*    />*/}
+            {/*</div>*/}
+            <form action={addPage}>
+                <input
+                    type="hidden"
+                    name="note_slug"
+                    id="note_slug"
+                    value={params.note_slug}
                 />
-            </div>
+                <input
+                    type="hidden"
+                    name="page_slug"
+                    id="page_slug"
+                    value={generate()}
+                />
+                <SubmitButton className="my-6" size="sm">
+                    <PlusIcon className="mr-2 w-5 h-5"/>
+                    ページを追加する
+                </SubmitButton>
+            </form>
             {/*<div className="w-full max-w-md mb-6">*/}
             {/*    <DropdownMenu>*/}
             {/*        <DropdownMenuTrigger asChild>*/}
@@ -43,35 +77,18 @@ export const Pages: React.FC<{ note_slug: string }> = (params) => {
             <Suspense fallback={'loading...'}>
                 <PageList note_slug={params.note_slug}/>
             </Suspense>
-            <form action={addPage}>
-                <input
-                    type="hidden"
-                    name="note_slug"
-                    id="note_slug"
-                    value={params.note_slug}
-                />
-                <input
-                    type="hidden"
-                    name="page_slug"
-                    id="page_slug"
-                    value={generate()}
-                />
-                <Button className="mt-6" size="sm" type={"submit"}>
-                    <PlusIcon className="mr-2 w-5 h-5"/>
-                    ページを追加する
-                </Button>
-            </form>
         </main>
     )
 }
 
-const PageList: React.FC<{note_slug: string}> = async ({note_slug}) => {
+const PageList: React.FC<{ note_slug: string }> = async ({note_slug}) => {
     const noteWithPages = await fetchPages(note_slug)
-    return <div className="w-full max-w-4xl grid gap-6">
+    return <div
+        className="w-full max-w-screen-2xl grid xl:grid-cols-8 lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4 px-4">
         {noteWithPages.pages.map((p) => {
             return <a href={`/bo/${noteWithPages.note.slug}/${p.slug}`} key={p.id}>
-                <Card className="p-4">
-                    <div className="flex items-start">
+                <Card className="w-full h-0 pb-full">
+                    <div className="flex items-start p-4">
                         <div>
                             <h3 className="text-lg font-semibold mb-2">{p.slug}</h3>
                             <pre className="text-sm text-gray-500">
@@ -91,9 +108,9 @@ const PageList: React.FC<{note_slug: string}> = async ({note_slug}) => {
                                 id="page_id"
                                 value={p.id}
                             />
-                            <Button type={'submit'} className={'hover:bg-red-600 hover:text-white'}>
+                            <SubmitButton className={'hover:bg-red-600 hover:text-white'}>
                                 <TrashIcon className="w-5 h-5"/>
-                            </Button>
+                            </SubmitButton>
                         </form>
                     </div>
                 </Card>

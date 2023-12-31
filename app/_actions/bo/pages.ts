@@ -76,7 +76,7 @@ export const addPage = async (formData: FormData) => {
         team_id: user.teamId,
         slug: formData.get("page_slug") as string,
         note_id: note.id,
-        body_raw: {},
+        body_raw: {"type": "doc", "content": []},
         body_text: '',
         created_at: new Date(),
         updated_at: new Date(),

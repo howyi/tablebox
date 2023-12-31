@@ -9,6 +9,12 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    extend: {
+      padding: {
+        '1/2': '50%',
+        full: '100%',
+      },
+    },
   },
   plugins: [
     require("@tailwindcss/typography"),

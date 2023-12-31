@@ -1,14 +1,14 @@
 'use server'
 
 import React from "react";
-import {Room} from "@/app/_components/live/Room";
 import {authenticate} from "@/app/_actions/auth";
+import {ProvidedCollabEditor} from "@/app/_components/bo/CollabEditor";
 
 export default async function Home() {
   const {teamId} = await authenticate()
   return (
     <main>
-      <Room roomId={`${teamId}:live`} />
+      <ProvidedCollabEditor roomId={`${teamId}:bo`} />
     </main>
   )
 }
