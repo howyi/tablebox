@@ -3,10 +3,9 @@
 import {db} from "@/app/_db/db";
 import * as schema from "@/app/_db/schema";
 import {and, eq } from "drizzle-orm";
-import {auth} from "@/app/auth";
 import {revalidatePath} from "next/cache";
 import {authenticate} from "@/app/_actions/auth";
-import {JSONContent} from "@tiptap/react";
+import {INITIAL_PAGE_BODY} from "@/app/_components/bo/CollabEditor";
 
 type NoteWithPages = {
     note: typeof schema.boil_notes.$inferSelect,
@@ -61,6 +60,7 @@ export const getPage = async (note_slug: string, page_slug: string): Promise<Not
     }
     return {note, page}
 }
+
 export const addPage = async (formData: FormData) => {
     const user = await authenticate()
     const note = await db.query.boil_notes.findFirst({

@@ -96,6 +96,27 @@ export const boil_pages = mysqlTable(
     }
 )
 
+export const boil_rooms = mysqlTable(
+    'boil_rooms',
+    {
+        id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
+        team_id: varchar('team_id', { length: 255 }).notNull(),
+        note_id: bigint('note_id', { mode: 'number' }).notNull(),
+        page_id: bigint('page_id', { mode: 'number' }).notNull(),
+        room_id: varchar('room_id', { length: 24 }).notNull(),
+        user_id: varchar("user_id", { length: 255 }).notNull(),
+        connection_id: bigint("connection_id", { mode: 'number' }).notNull(),
+    }
+)
+
+export const roomsRelations = relations(boil_rooms, ({ one }) => ({
+    user: one(users, {
+        fields: [boil_rooms.user_id],
+        references: [users.id],
+    }),
+}));
+
+
 // Next-Auth 用DB
 // https://authjs.dev/reference/adapter/drizzle#mysql
 export const users = mysqlTable("user", {

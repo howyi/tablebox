@@ -18,7 +18,7 @@ const getDB = () => {
         const connection = mysql2.createConnection({
             uri: config.dbCredentials.connectionString
         })
-        return drizzle_mysql.drizzle(connection, { schema, mode: 'default' });
+        return drizzle_mysql.drizzle(connection, { schema, mode: 'default', logger: true });
     }
 }
 
