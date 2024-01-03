@@ -19,11 +19,12 @@ type Props = {
     onUpdate: (editor: EditorClass) => Promise<void>
     onDebouncedUpdate: (editor: EditorClass) => Promise<void>
     roomId: string
+    noteId: number
+    pageId: number
     initialValue: JSONContent
 }
 
 export const ProvidedCollabEditor: React.FC<Props> = (params) => {
-    const [isInitialize, setIsInitialize] = React.useState(false)
     return <RoomProvider id={params.roomId} initialPresence={{
         cursor: null
     }}>
@@ -33,6 +34,7 @@ export const ProvidedCollabEditor: React.FC<Props> = (params) => {
     </RoomProvider>
 }
 
+let editorInitialized = false;
 let initializeChecked = false;
 
 export const CollabEditor: React.FC<Props> = (params) => {
@@ -52,13 +54,14 @@ export const CollabEditor: React.FC<Props> = (params) => {
         const roomMembers = await getRoomMember(params.roomId)
         if (room.getOthers().length + 1 != roomMembers) {
             // DB上のルーム人数と不整合が発生しているため、reloadを呼び出し
-            console.log('DB上のルーム人数と不整合が発生しているため、reloadを呼び出し', room.getOthers(), roomMembers)
+            console.warn('DB上のルーム人数と不整合が発生しているため、reloadを呼び出し', room.getOthers(), roomMembers)
             await reloadRoom(params.roomId)
         }
     }
 
     // Set up Liveblocks Yjs provider
     React.useEffect(() => {
+        if (editorInitialized) return
         const yDoc = new Y.Doc();
         const yProvider = new LiveblocksProvider(room, yDoc);
         setYDoc(yDoc);
@@ -68,13 +71,25 @@ export const CollabEditor: React.FC<Props> = (params) => {
             setIsSynced(syncStatus)
         });
 
-        enterRoom(params.roomId, room.getSelf()?.connectionId!).then()
-        window.addEventListener("beforeunload", handleBeforeUnload);
+        enterRoom(params.roomId, params.noteId, params.pageId, room.getSelf()?.connectionId!).then((res) => {
+            if (res.initialized) {
+                // 最初に入ったユーザのみカーソルが表示されない不具合があるため、再接続を行う
+                room.reconnect()
+            }
+        })
 
+        editorInitialized = true
         return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
             yDoc?.destroy();
             yProvider?.destroy();
+        };
+    }, [room]);
+
+    React.useEffect(() => {
+        console.log('room:', room.getSelf()?.connectionId)
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, [room]);
 
@@ -82,10 +97,6 @@ export const CollabEditor: React.FC<Props> = (params) => {
         if (editor && isSynced && !initializeChecked) {
             // 同期完了時に一度だけ呼び出される
             console.log('require initialized: updated', editor.getJSON())
-            if (editor.getText() == '') {
-                // ドキュメントが空のときは初期値を入れ込む
-                editor.commands.setContent(params.initialValue)
-            }
             checkRoomMembers().then()
             initializeChecked = true
         }
@@ -126,6 +137,7 @@ export const CollabEditor: React.FC<Props> = (params) => {
                     [
                         Collaboration.configure({
                             document: yDoc,
+                            field: 'prosemirror',
                         }),
                         CollaborationCursor.configure({
                             provider: provider,

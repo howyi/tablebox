@@ -8,6 +8,8 @@ import {defaultEditorContent} from "@/app/_components/novel/ui/editor/default-co
 export const BoEditor: React.FC<{ roomId: string }> = ({roomId}) => {
     return <ProvidedCollabEditor
         roomId={roomId}
+        noteId={0}
+        pageId={0}
         onUpdate={async (e) => {
         }}
         onDebouncedUpdate={async (e) => {
