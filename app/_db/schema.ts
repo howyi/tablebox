@@ -78,6 +78,7 @@ export const boil_notes = mysqlTable(
     {
         id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
         team_id: varchar('team_id', { length: 255 }).notNull(),
+        name: varchar('name', { length: 24 }).notNull(),
         slug: varchar('slug', { length: 24 }).notNull(),
     }
 )
@@ -88,6 +89,7 @@ export const boil_pages = mysqlTable(
         id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
         team_id: varchar('team_id', { length: 255 }).notNull(),
         note_id: bigint('note_id', { mode: 'number' }).notNull(),
+        name: varchar('name', { length: 24 }).notNull(),
         slug: varchar('slug', { length: 24 }).notNull(),
         body_raw: json('body_raw').notNull(),
         body_text: text('body_text').notNull(),

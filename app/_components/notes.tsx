@@ -11,6 +11,8 @@ import {generate, count} from "random-words";
 import {DeleteIcon} from "lucide-react";
 import {TrashIcon} from "@heroicons/react/20/solid";
 import {SubmitButton} from "@/app/_components/submit-button";
+import {NoteSetting} from "@/app/_components/note-setting";
+import Link from "next/link";
 
 export function Notes() {
     return (
@@ -65,10 +67,10 @@ const NoteList: React.FC = async () => {
     const notes = await fetchNotes()
     return <div className="w-full max-w-md grid gap-6">
         {notes.map((n) => {
-            return <a href={`/bo/${n.slug}`} key={n.id}>
-                <Card className="p-4">
+            return <Card className="p-4" key={n.id}>
                     <div className="flex items-start">
                         <div className="flex-shrink-0 mr-3">
+                            <Link href={`/bo/${n.slug}`}>
                             <img
                                 alt="Thumbnail"
                                 className="w-16 h-16 object-cover rounded-md"
@@ -80,24 +82,34 @@ const NoteList: React.FC = async () => {
                                 }}
                                 width="100"
                             />
+                            </Link>
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">{n.slug}</h3>
+                            <Link href={`/bo/${n.slug}`}>
+                                <h3 className="text-lg font-semibold mb-2">{n.name}</h3>
+                                <h3 className="text-sm text-gray-500 mb-2">{`/bo/${n.slug}`}</h3>
+                            </Link>
                         </div>
-                        <form className="ml-auto" action={deleteNote}>
-                            <input
-                                type="hidden"
-                                name="note_id"
-                                id="note_id"
-                                value={n.id}
+                        <div className={'ml-auto'}>
+                        <NoteSetting
+                                noteId={n.id}
+                                name={n.name}
+                                slug={n.slug}
                             />
-                            <SubmitButton className={'hover:bg-red-600 hover:text-white'}>
-                                <TrashIcon className="w-5 h-5"/>
-                            </SubmitButton>
-                        </form>
+                        </div>
+                        {/*<form className="ml-auto" action={deleteNote}>*/}
+                        {/*    <input*/}
+                        {/*        type="hidden"*/}
+                        {/*        name="note_id"*/}
+                        {/*        id="note_id"*/}
+                        {/*        value={n.id}*/}
+                        {/*    />*/}
+                        {/*    <SubmitButton className={'hover:bg-red-600 hover:text-white'}>*/}
+                        {/*        <TrashIcon className="w-5 h-5"/>*/}
+                        {/*    </SubmitButton>*/}
+                        {/*</form>*/}
                     </div>
                 </Card>
-            </a>
         })}
     </div>
 }

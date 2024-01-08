@@ -18,9 +18,21 @@ export const addNote = async (formData: FormData) => {
     const user = await authenticate()
     const model: typeof schema.boil_notes.$inferInsert = {
         team_id: user.teamId,
+        name: formData.get("slug") as string,
         slug: formData.get("slug") as string,
     }
     await db.insert(schema.boil_notes).values(model);
+    revalidatePath("/");
+}
+export const updateNote = async (formData: FormData) => {
+    const user = await authenticate()
+    const model: typeof schema.boil_notes.$inferInsert = {
+        team_id: user.teamId,
+        id: Number(formData.get("note_id")),
+        name: formData.get("name") as string,
+        slug: formData.get("slug") as string,
+    }
+    await db.update(schema.boil_notes).set(model);
     revalidatePath("/");
 }
 
