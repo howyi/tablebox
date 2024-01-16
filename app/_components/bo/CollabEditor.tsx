@@ -4,7 +4,7 @@ import React, {useState} from "react";
 // import { Editor as NovelEditor } from "novel";
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
-import {RoomProvider, useOthers, useRoom, useSelf} from "@/liveblocks.config";
+import {RoomProvider, useOthers, useRoom, useSelf, useStorage} from "@/liveblocks.config";
 import LiveblocksProvider from "@liveblocks/yjs";
 import {CollaborationCursor} from "@tiptap/extension-collaboration-cursor";
 import "@/app/_components/novel/styles/index.css";
@@ -14,10 +14,12 @@ import {Editor as EditorClass} from "@tiptap/core";
 import {ClientSideSuspense} from "@liveblocks/react";
 import {enterRoom, getRoomMember, leaveRoom, reloadRoom} from "@/app/_actions/bo/rooms";
 import {JSONContent} from "@tiptap/react";
+import {LiveObject} from "@liveblocks/client";
 
 type Props = {
     onUpdate: (editor: EditorClass) => Promise<void>
     onDebouncedUpdate: (editor: EditorClass) => Promise<void>
+    onInitialized: (editor: EditorClass) => Promise<void>
     roomId: string
     noteId: number
     pageId: number
@@ -40,6 +42,7 @@ let initializeChecked = false;
 export const CollabEditor: React.FC<Props> = (params) => {
     const room = useRoom();
     const userInfo = useSelf((me) => me.info);
+    const yDocInitialized = useStorage((root) => root?.editor?.initialized ?? false);
 
     const [yDoc, setYDoc] = useState<Y.Doc>();
     const [provider, setProvider] = useState<any>();
@@ -72,13 +75,13 @@ export const CollabEditor: React.FC<Props> = (params) => {
         });
 
         enterRoom(params.roomId, params.noteId, params.pageId, room.getSelf()?.connectionId!).then((res) => {
-            if (res.initialized) {
+            if (res.requireReconnect) {
                 // 最初に入ったユーザのみカーソルが表示されない不具合があるため、再接続を行う
                 room.reconnect()
             }
+            editorInitialized = true
         })
 
-        editorInitialized = true
         return () => {
             yDoc?.destroy();
             yProvider?.destroy();
@@ -99,6 +102,7 @@ export const CollabEditor: React.FC<Props> = (params) => {
             console.log('require initialized: updated', editor.getJSON())
             checkRoomMembers().then()
             initializeChecked = true
+            params.onInitialized(editor).then();
         }
     }, [editor, isSynced])
 
@@ -111,6 +115,7 @@ export const CollabEditor: React.FC<Props> = (params) => {
         setEditor(editor)
         if (!isSynced) return
         if (!initializeChecked) return
+        if (!yDocInitialized) return
         console.log('updated')
         await params.onUpdate(editor)
     }
@@ -119,6 +124,7 @@ export const CollabEditor: React.FC<Props> = (params) => {
         if (!editor) return
         if (!isSynced) return
         if (!initializeChecked) return
+        if (!yDocInitialized) return
         console.log('debounced')
         await params.onDebouncedUpdate(editor)
     }

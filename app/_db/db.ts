@@ -16,7 +16,8 @@ const getDB = () => {
         return driizzle_pscale.drizzle(connection, { schema });
     } else {
         const connection = mysql2.createConnection({
-            uri: config.dbCredentials.connectionString
+            uri: config.dbCredentials.connectionString,
+            charset: 'utf8mb4',
         })
         return drizzle_mysql.drizzle(connection, { schema, mode: 'default', logger: true });
     }

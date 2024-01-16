@@ -11,16 +11,23 @@ export const Editor: React.FC<{
     note: typeof boil_notes.$inferSelect
     page: typeof boil_pages.$inferSelect
 }> = ({note, page}) => {
+    const onInitialized = async (editor: EditorClass) => {
+        window.document.title = page.name;
+    }
+
     const onUpdate = async (editor: EditorClass) => {
     }
 
     const onDebouncedUpdate = async (editor: EditorClass) => {
-        await editPage(
+        const text = editor.getText({blockSeparator: '\n'})
+        const {slug, name} = await editPage(
             note.id,
             page.id,
             JSON.stringify(editor.getJSON()),
-            editor.getText({blockSeparator: '\n'}),
+            text,
         )
+        window.document.title = name;
+        window.history.pushState('', '', `/bo/${note.slug}/${slug}`)
     }
 
   return (
@@ -32,6 +39,7 @@ export const Editor: React.FC<{
           onUpdate={onUpdate}
           onDebouncedUpdate={onDebouncedUpdate}
           initialValue={page.body_raw as JSONContent}
+          onInitialized={onInitialized}
       />
     </main>
   )

@@ -4,13 +4,15 @@ import {db} from "@/app/_db/db";
 import * as schema from "@/app/_db/schema";
 import {and, eq } from "drizzle-orm";
 import {authenticate} from "@/app/_actions/auth";
-import {Liveblocks} from "@liveblocks/node";
+import {Liveblocks, PlainLsonObject} from "@liveblocks/node";
 // @ts-ignore
 import {prosemirrorJSONToYDoc} from "y-prosemirror";
 import {defaultEditorContent} from "@/app/_components/novel/ui/editor/default-content";
 import {Editor, getSchema} from "@tiptap/core";
 import * as Y from 'yjs'
 import {headlessExtensions} from "@/app/_components/novel/ui/editor/extensions/headless-extensions";
+import {LiveObject, toPlainLson} from "@liveblocks/client";
+import {Storage} from "@/liveblocks.config";
 
 const liveblocks = new Liveblocks({
     secret: process.env.LIVEBLOCKS_API_KEY!,
@@ -21,7 +23,7 @@ export const enterRoom = async (
     note_id: number,
     page_id: number,
     connection_id: number,
-): Promise<{initialized: boolean}> => {
+): Promise<{requireReconnect: boolean}> => {
     const user = await authenticate()
 
     const roomMember = await db.query.boil_rooms.findFirst({
@@ -50,6 +52,15 @@ export const enterRoom = async (
         );
         // Initialize the Yjs document with the update
         await liveblocks.sendYjsBinaryUpdate(room_id, yUpdate);
+        const initialStorage: LiveObject<Storage> = new LiveObject({
+            editor: new LiveObject({
+                initialized: true
+            }),
+        });
+        const storage = await liveblocks.initializeStorageDocument(
+            room_id,
+            toPlainLson(initialStorage) as PlainLsonObject
+        );
         initialized = true
     }
 
@@ -63,7 +74,7 @@ export const enterRoom = async (
     })
 
     return {
-        initialized
+        requireReconnect: initialized
     }
 }
 
@@ -115,7 +126,7 @@ export const reloadRoom = async (room_id: string): Promise<void> => {
             note_id: 0,
             page_id: 0,
             room_id: room_id,
-            user_id: uElement.id,
+            user_id: uElement.id!,
             connection_id: uElement.connectionId,
         })
     }

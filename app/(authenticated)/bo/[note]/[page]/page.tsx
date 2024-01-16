@@ -1,10 +1,12 @@
 import React, {Suspense} from "react";
 import {Editor} from "@/app/_components/bo/Editor";
-import {getPage} from "@/app/_actions/bo/pages";
+import {getPage, NoteWithPage} from "@/app/_actions/bo/pages";
 import {ArrowRightIcon} from "@heroicons/react/20/solid";
 
-export default async function Home({ params: {note, page} }: { params: { note: string, page: string } }) {
-
+export default async function Home({params}: { params: { note: string, page: string } }) {
+    const decodedNoteSlug = decodeURIComponent(params.note)
+    const decodedPageSlug = decodeURIComponent(params.page)
+    const {page, note} = await getPage(decodedNoteSlug, decodedPageSlug);
   return (
       <main>
           <nav aria-label="breadcrumb" className="mb-4 flex flex-col items-center mt-10">
@@ -16,27 +18,26 @@ export default async function Home({ params: {note, page} }: { params: { note: s
                   </li>
                   <ArrowRightIcon className="w-4 h-4 text-gray-500"/>
                   <li>
-                      <a className="text-sm text-gray-500" href={`/bo/${note}`}>
-                          {note}
+                      <a className="text-sm text-gray-500" href={`/bo/${decodedNoteSlug}`}>
+                          {decodedNoteSlug}
                       </a>
                   </li>
                   <ArrowRightIcon className="w-4 h-4 text-gray-500"/>
                   <li>
-                      <a className="text-sm text-gray-500" href={`/bo/${note}/${page}`}>
-                          {page}
+                      <a className="text-sm text-gray-500" href={`/bo/${decodedNoteSlug}/${decodedPageSlug}`}>
+                          {page.name}
                       </a>
                   </li>
               </ol>
           </nav>
           <Suspense fallback={<p>loading ...</p>}>
-              <EditorSuspense note_slug={note} page_slug={page}/>
+              <EditorSuspense note={note} page={page}/>
           </Suspense>
       </main>
   )
 }
 
 
-const EditorSuspense: React.FC<{ note_slug: string, page_slug: string }> = async ({note_slug, page_slug}) => {
-    const {page, note} = await getPage(note_slug, page_slug);
+export async function EditorSuspense({note, page}: NoteWithPage)  {
     return <Editor note={note} page={page}/>
 }

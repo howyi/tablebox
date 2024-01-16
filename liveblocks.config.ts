@@ -1,4 +1,4 @@
-import { createClient } from "@liveblocks/client";
+import {createClient, LiveObject} from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 
 const client = createClient({
@@ -17,7 +17,8 @@ type Presence = {
 // Room, even after all users leave. Fields under Storage typically are
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
-type Storage = {
+export type Storage = {
+  editor: LiveObject<{ initialized: boolean }>
   // author: LiveObject<{ firstName: string, lastName: string }>,
   // ...
 };

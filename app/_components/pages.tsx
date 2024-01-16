@@ -90,7 +90,7 @@ const PageList: React.FC<{ note_slug: string }> = async ({note_slug}) => {
                 <Card className="w-full h-0 pb-full">
                     <div className="flex items-start p-4">
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">{p.slug}</h3>
+                            {/*<h3 className="text-lg font-semibold mb-2">{p.slug}</h3>*/}
                             <pre className="text-sm text-gray-500">
                             {p.body_text}
                         </pre>

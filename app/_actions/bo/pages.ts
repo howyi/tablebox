@@ -6,6 +6,7 @@ import {and, eq } from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {authenticate} from "@/app/_actions/auth";
 import {INITIAL_PAGE_BODY} from "@/app/_components/bo/CollabEditor";
+import {redirect} from "next/navigation";
 
 type NoteWithPages = {
     note: typeof schema.boil_notes.$inferSelect,
@@ -33,7 +34,7 @@ export const fetchPages = async (note_slug: string): Promise<NoteWithPages> => {
     };
 }
 
-type NoteWithPage = {
+export type NoteWithPage = {
     note: typeof schema.boil_notes.$inferSelect,
     page: typeof schema.boil_pages.$inferSelect
 }
@@ -72,25 +73,37 @@ export const addPage = async (formData: FormData) => {
     if (!note) {
         throw new Error('note not found')
     }
+    const slug = formData.get("page_slug") as string
     const model: typeof schema.boil_pages.$inferInsert = {
         team_id: user.teamId,
-        slug: formData.get("page_slug") as string,
+        name: slug,
+        slug,
         note_id: note.id,
-        body_raw: {"type": "doc", "content": []},
-        body_text: '',
+        body_raw: {"type": "doc", "content": [
+                {
+                    type: "heading",
+                    attrs: { level: 1 },
+                    content: [{ type: "text", text: slug }],
+                },
+            ]
+        },
+        body_text: slug,
         created_at: new Date(),
         updated_at: new Date(),
     }
-    await db.insert(schema.boil_pages).values(model);
-    revalidatePath("/");
+     await db.insert(schema.boil_pages).values(model);
+    redirect(`/bo/${note.slug}/${slug}`);
 }
 export const editPage = async (
     note_id: number,
     page_id: number,
     body_raw: string,
     body_text: string,
-) => {
+): Promise<{ slug: string, name: string }> => {
     const user = await authenticate()
+
+    const title = body_text.split(/\n/)[0]
+    const slug = title
 
     const page = await db.query.boil_pages.findFirst({
         where: and(
@@ -108,6 +121,8 @@ export const editPage = async (
             {
                 ...page,
                 body_raw: JSON.parse(body_raw),
+                name: title,
+                slug,
                 body_text,
                 updated_at: new Date(),
             }
@@ -116,6 +131,7 @@ export const editPage = async (
             eq(schema.boil_pages.note_id, note_id),
             eq(schema.boil_pages.id, page_id),
         ))
+    return {slug: title, name: title}
 }
 
 export const deletePage = async (formData: FormData) => {
