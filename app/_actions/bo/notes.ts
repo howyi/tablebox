@@ -42,7 +42,10 @@ export const updateNote = async (formData: FormData) => {
         name: formData.get("name") as string,
         slug: formData.get("slug") as string,
     }
-    await db.update(schema.boil_notes).set(model);
+    await db.update(schema.boil_notes).set(model).where(and(
+        eq(schema.boil_notes.team_id, user.teamId),
+        eq(schema.boil_notes.id, Number(formData.get("note_id"))),
+    ));
     revalidatePath("/");
 }
 
