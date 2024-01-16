@@ -12,7 +12,7 @@ import {Editor, getSchema} from "@tiptap/core";
 import * as Y from 'yjs'
 import {headlessExtensions} from "@/app/_components/novel/ui/editor/extensions/headless-extensions";
 import {LiveObject, toPlainLson} from "@liveblocks/client";
-import {Storage} from "@/liveblocks.config";
+import {Storage, UserMeta} from "@/liveblocks.config";
 
 const liveblocks = new Liveblocks({
     secret: process.env.LIVEBLOCKS_API_KEY!,
@@ -22,6 +22,7 @@ export const enterRoom = async (
     room_id: string,
     note_id: number,
     page_id: number,
+    color: string,
     connection_id: number,
 ): Promise<{requireReconnect: boolean}> => {
     const user = await authenticate()
@@ -70,6 +71,9 @@ export const enterRoom = async (
         page_id,
         room_id: room_id,
         user_id: user.id,
+        user_name: user.name,
+        user_picture: user.image,
+        user_color: color,
         connection_id: connection_id,
     })
 
@@ -117,16 +121,20 @@ export const leaveRoom = async (room_id: string, connection_id: number): Promise
 // 1人Roomのとき、getActiveUsersは0を返すので注意すること
 export const reloadRoom = async (room_id: string): Promise<void> => {
     const user = await authenticate()
-    const res = await liveblocks.getActiveUsers(room_id)
+    const res = await liveblocks.getActiveUsers<UserMeta['info']>(room_id)
     const newModels: typeof schema.boil_rooms.$inferInsert[] = []
     // @ts-ignore
     for (let uElement of res?.data) {
+        console.log(uElement)
         newModels.push({
             team_id: user.teamId,
             note_id: 0,
             page_id: 0,
             room_id: room_id,
             user_id: uElement.id!,
+            user_name: uElement.info?.name!,
+            user_color: uElement.info?.color!,
+            user_picture: uElement.info?.picture!,
             connection_id: uElement.connectionId,
         })
     }

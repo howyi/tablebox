@@ -5,7 +5,7 @@ import * as schema from "@/app/_db/schema";
 import {eq } from "drizzle-orm";
 import {auth} from "@/app/auth";
 
-export const authenticate = async (): Promise<{ teamId:string, id:string }> => {
+export const authenticate = async (): Promise<{ teamId:string, name: string, image: string, id:string }> => {
     const session = await auth()
     if (!session) {
         throw new Error("Unauthenticated")
@@ -22,5 +22,10 @@ export const authenticate = async (): Promise<{ teamId:string, id:string }> => {
     if (!team) {
         throw new Error("Unauthenticated")
     }
-    return {id: session.user.id, teamId:team.id}
+    return {
+        id: session.user.id,
+        name: session.user.name ?? '',
+        image: session.user.image ?? '',
+        teamId:team.id,
+    }
 }

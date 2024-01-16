@@ -13,6 +13,7 @@ import {TrashIcon} from "@heroicons/react/20/solid";
 import {SubmitButton} from "@/app/_components/submit-button";
 import {NoteSetting} from "@/app/_components/note-setting";
 import Link from "next/link";
+import {UserMeta} from "@/liveblocks.config";
 
 export function Notes() {
     return (
@@ -97,19 +98,25 @@ const NoteList: React.FC = async () => {
                                 slug={n.slug}
                             />
                         </div>
-                        {/*<form className="ml-auto" action={deleteNote}>*/}
-                        {/*    <input*/}
-                        {/*        type="hidden"*/}
-                        {/*        name="note_id"*/}
-                        {/*        id="note_id"*/}
-                        {/*        value={n.id}*/}
-                        {/*    />*/}
-                        {/*    <SubmitButton className={'hover:bg-red-600 hover:text-white'}>*/}
-                        {/*        <TrashIcon className="w-5 h-5"/>*/}
-                        {/*    </SubmitButton>*/}
-                        {/*</form>*/}
                     </div>
-                </Card>
+                <div>
+                    {n.rooms.length != 0 &&
+                    <div className={'py-2 flex justify-center items-center gap-2'}>
+                        <p>編集中: </p>
+                        {n.rooms
+                            .map((room) => (
+                                <div key={room.connection_id} className={'cursor-pointer'}>
+                                    <AvatarIcon user={{
+                                        name: room.user_name,
+                                        picture: room.user_picture,
+                                        color: room.user_color
+                                    }} href={`/bo/${n.slug}/${room.page.slug}`}/>
+                                </div>
+                            ))}
+                    </div>
+                    }
+                </div>
+            </Card>
         })}
     </div>
 }
@@ -173,4 +180,17 @@ function PlusIcon(props: any) {
             <path d="M12 5v14"/>
         </svg>
     )
+}
+
+export const AvatarIcon: React.FC<{ user: UserMeta['info']} & {href?: string}> = ({user, href}) => {
+    return <a href={href}>
+        <img
+        className={"inline-block h-10 w-10 rounded-full"}
+        style={{
+            boxShadow: 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) ' + user?.color
+        }}
+        src={user?.picture!}
+        alt=""
+    />
+    </a>
 }

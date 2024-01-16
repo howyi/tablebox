@@ -74,7 +74,7 @@ export const CollabEditor: React.FC<Props> = (params) => {
             setIsSynced(syncStatus)
         });
 
-        enterRoom(params.roomId, params.noteId, params.pageId, room.getSelf()?.connectionId!).then((res) => {
+        enterRoom(params.roomId, params.noteId, params.pageId, userInfo?.color!, room.getSelf()?.connectionId!).then((res) => {
             if (res.requireReconnect) {
                 // 最初に入ったユーザのみカーソルが表示されない不具合があるため、再接続を行う
                 room.reconnect()

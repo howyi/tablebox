@@ -5,12 +5,13 @@ import * as schema from "@/app/_db/schema";
 import {and, eq } from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {authenticate} from "@/app/_actions/auth";
-import {INITIAL_PAGE_BODY} from "@/app/_components/bo/CollabEditor";
 import {redirect} from "next/navigation";
 
 type NoteWithPages = {
     note: typeof schema.boil_notes.$inferSelect,
-    pages: typeof schema.boil_pages.$inferSelect[]
+    pages: (typeof schema.boil_pages.$inferSelect & {
+        rooms: typeof schema.boil_rooms.$inferSelect[]
+    })[]
 }
 export const fetchPages = async (note_slug: string): Promise<NoteWithPages> => {
     const user = await authenticate()
@@ -30,6 +31,9 @@ export const fetchPages = async (note_slug: string): Promise<NoteWithPages> => {
                 eq(schema.boil_pages.team_id, user.teamId),
                 eq(schema.boil_pages.note_id, note.id),
             ),
+            with: {
+                rooms: true
+            }
         })
     };
 }

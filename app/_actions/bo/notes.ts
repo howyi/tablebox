@@ -8,10 +8,20 @@ import {revalidatePath} from "next/cache";
 import {authenticate} from "@/app/_actions/auth";
 import {sleep} from "openai/core";
 
-export const fetchNotes = async (): Promise<typeof schema.boil_notes.$inferSelect[]> => {
+type RoomWithPage = typeof schema.boil_rooms.$inferSelect & {
+    page: typeof schema.boil_pages.$inferSelect
+}
+export const fetchNotes = async (): Promise<(typeof schema.boil_notes.$inferSelect & {rooms: RoomWithPage[]  })[]> => {
     const user = await authenticate()
     return db.query.boil_notes.findMany({
         where: eq(schema.boil_notes.team_id, user.teamId),
+        with: {
+            rooms: {
+                with: {
+                    page: true
+                }
+            }
+        }
     });
 }
 export const addNote = async (formData: FormData) => {

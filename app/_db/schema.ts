@@ -83,6 +83,10 @@ export const boil_notes = mysqlTable(
     }
 )
 
+export const notesRelations = relations(boil_notes, ({ many }) => ({
+    rooms: many(boil_rooms),
+}));
+
 export const boil_pages = mysqlTable(
     'boil_pages',
     {
@@ -98,6 +102,10 @@ export const boil_pages = mysqlTable(
     }
 )
 
+export const pagesRelations = relations(boil_pages, ({ many }) => ({
+    rooms: many(boil_rooms),
+}));
+
 export const boil_rooms = mysqlTable(
     'boil_rooms',
     {
@@ -107,6 +115,9 @@ export const boil_rooms = mysqlTable(
         page_id: bigint('page_id', { mode: 'number' }).notNull(),
         room_id: varchar('room_id', { length: 24 }).notNull(),
         user_id: varchar("user_id", { length: 255 }).notNull(),
+        user_name: varchar("user_name", { length: 255 }).notNull(),
+        user_picture: varchar("user_picture", { length: 255 }).notNull(),
+        user_color: varchar("user_color", { length: 255 }).notNull(),
         connection_id: bigint("connection_id", { mode: 'number' }).notNull(),
     }
 )
@@ -116,8 +127,15 @@ export const roomsRelations = relations(boil_rooms, ({ one }) => ({
         fields: [boil_rooms.user_id],
         references: [users.id],
     }),
+    note: one(boil_notes, {
+        fields: [boil_rooms.note_id],
+        references: [boil_notes.id],
+    }),
+    page: one(boil_pages, {
+        fields: [boil_rooms.page_id],
+        references: [boil_pages.id],
+    }),
 }));
-
 
 // Next-Auth 用DB
 // https://authjs.dev/reference/adapter/drizzle#mysql

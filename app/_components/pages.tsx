@@ -11,6 +11,7 @@ import {generate} from "random-words";
 import {deleteNote} from "@/app/_actions/bo/notes";
 import {ArrowRightIcon, TrashIcon} from "@heroicons/react/20/solid";
 import {SubmitButton} from "@/app/_components/submit-button";
+import {AvatarIcon} from "@/app/_components/notes";
 
 export const Pages: React.FC<{ note_slug: string }> = (params) => {
     return (
@@ -112,7 +113,23 @@ const PageList: React.FC<{ note_slug: string }> = async ({note_slug}) => {
                                 <TrashIcon className="w-5 h-5"/>
                             </SubmitButton>
                         </form>
+
                     </div>
+                    {p.rooms.length != 0 &&
+                        <div className={'p-2 flex items-center gap-2'}>
+                            <p>編集中: </p>
+                            {p.rooms
+                                .map((room) => (
+                                    <div key={room.connection_id} className={'cursor-pointer'}>
+                                        <AvatarIcon user={{
+                                            name: room.user_name,
+                                            picture: room.user_picture,
+                                            color: room.user_color
+                                        }} href={`/bo/${noteWithPages.note.slug}/${p.slug}`}/>
+                                    </div>
+                                ))}
+                        </div>
+                    }
                 </Card>
             </a>
         })}
