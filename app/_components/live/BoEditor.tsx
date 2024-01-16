@@ -14,6 +14,9 @@ export const BoEditor: React.FC<{ roomId: string }> = ({roomId}) => {
         }}
         onDebouncedUpdate={async (e) => {
         }}
+        onInitialized={async (e) => {
+
+        }}
         initialValue={defaultEditorContent}
     />
 }

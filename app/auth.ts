@@ -5,6 +5,7 @@ import SlackProvider, { SlackProfile } from "next-auth/providers/slack";
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import {db} from "@/app/_db/db";
 import * as schema from "@/app/_db/schema";
+import {mysqlTable} from "@/app/_db/schema";
 
 declare module "next-auth" {
     interface Session {
@@ -48,7 +49,7 @@ const callbacks: CallbacksOptions<SlackProfile> = {
     }
 }
 export const config = {
-    adapter: DrizzleAdapter(db),
+    adapter: DrizzleAdapter(db, mysqlTable),
     providers: [
         SlackProvider<SlackProfile>({
             clientId: process.env.SLACK_CLIENT_ID!,

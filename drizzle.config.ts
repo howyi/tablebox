@@ -4,6 +4,7 @@ import { loadEnvConfig } from "@next/env";
 loadEnvConfig(process.cwd());
 
 export default {
+    tablesFilter: ["tablebox_*"],
     schema: './app/_db/schema.ts',
     out: './app/_db/migrations',
     driver: 'mysql2',

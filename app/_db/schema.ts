@@ -2,16 +2,17 @@ import {
     int,
     timestamp,
     mysqlEnum,
-    mysqlTable,
     bigint,
     uniqueIndex,
     varchar,
     primaryKey,
-    text, datetime, json, index
+    text, datetime, json, index, mysqlTableCreator
 } from 'drizzle-orm/mysql-core';
 import type { AdapterAccount } from "@auth/core/adapters"
 import {relations} from "drizzle-orm";
 import {Installation} from "@slack/bolt";
+
+export const mysqlTable = mysqlTableCreator((name) => `tablebox_${name}`);
 
 export const user_slack_teams = mysqlTable(
     'user_slack_teams',
@@ -57,8 +58,8 @@ export const bga_team_notify_settings = mysqlTable(
     }
 )
 
-export const tablebox_teams = mysqlTable(
-    'tablebox_teams',
+export const slack_teams = mysqlTable(
+    'slack_teams',
     {
         id: varchar('id', { length: 255 }).primaryKey().notNull(),
         installation: json('installation').$type<Installation>(),
@@ -190,31 +191,3 @@ export const verificationTokens = mysqlTable(
         compoundKey: primaryKey(vt.identifier, vt.token),
     })
 )
-
-
-// memebox tables
-// https://github.com/howyi/memebox/blob/main/app/_db/schema.ts
-export const teams = mysqlTable(
-    'teams',
-    {
-        id: varchar('id', { length: 255 }).primaryKey().notNull(),
-        installation: json('installation'),
-    },
-);
-
-// memebox tables
-// https://github.com/howyi/memebox/blob/main/app/_db/schema.ts
-export const memes = mysqlTable(
-    'memes',
-    {
-        id: varchar("id", { length: 255 }).primaryKey(),
-        slackTeamId: varchar("slackTeamId", { length: 255 }).notNull(),
-        author: text("author"),
-        text: text("text"),
-        url: varchar("url", { length: 255 }).unique(),
-        created_at: datetime("created_at").notNull(),
-    },(table) => {
-        return {
-            teamIdx: index("team_idx").on(table.slackTeamId),
-        };
-    });

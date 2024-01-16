@@ -38,6 +38,6 @@ export default async function Home({params}: { params: { note: string, page: str
 }
 
 
-export async function EditorSuspense({note, page}: NoteWithPage)  {
+async function EditorSuspense({note, page}: NoteWithPage)  {
     return <Editor note={note} page={page}/>
 }

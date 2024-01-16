@@ -2,7 +2,7 @@ import NextRouteHandlerReceiver from "@/app/api/slack/[...slug]/NextRouteHandler
 import {App} from "@slack/bolt";
 import {db} from "@/app/_db/db";
 import {eq} from "drizzle-orm";
-import {tablebox_teams} from "@/app/_db/schema";
+import {slack_teams} from "@/app/_db/schema";
 import OpenAI from "openai";
 
 export const dynamic = 'force-dynamic' // defaults to force-static
@@ -48,15 +48,15 @@ const receiver = new NextRouteHandlerReceiver({
     stateSecret: process.env.SLACK_STATE_SECRET,
     installationStore: {
         storeInstallation: async (installation) => {
-            const model: typeof tablebox_teams.$inferInsert = {
+            const model: typeof slack_teams.$inferInsert = {
                 id: installation.team?.id!,
                 installation
             }
-            await db.insert(tablebox_teams).values(model).onDuplicateKeyUpdate({set: model})
+            await db.insert(slack_teams).values(model).onDuplicateKeyUpdate({set: model})
         },
         fetchInstallation: async (InstallQuery) => {
-            const team = await db.query.tablebox_teams.findFirst({
-                where: eq(tablebox_teams.id, InstallQuery.teamId!)
+            const team = await db.query.slack_teams.findFirst({
+                where: eq(slack_teams.id, InstallQuery.teamId!)
             })
             if (!team || !team.installation) {
                 throw new Error('not found')
