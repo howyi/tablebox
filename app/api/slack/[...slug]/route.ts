@@ -126,6 +126,34 @@ app.event('reaction_added', async ({event, say, client, context}) => {
     })
 })
 
+app.event("app_mention", async ({ event, client, say, context }) => {
+    if (context.retryNum) {
+        // リトライによる再送は無視する
+        return
+    }
+
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: "system",
+                content: "あなたは有能なアシスタントです。"
+            },
+            {
+                role: "user",
+                content: event.text,
+            }
+        ],
+        model: "gpt-3.5-turbo",
+    });
+
+    await say({
+        channel: event.channel,
+        username: '返答メカ',
+        icon_emoji: `:robot_face:`,
+        text: completion.choices[0].message.content ?? ''
+    })
+})
+
 const handler = await receiver.start()
 
 export {handler as GET, handler as POST}
